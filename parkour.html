@@ -226,6 +226,7 @@
 
         function preload() { 
             winSound = loadSound("smb_stage_clear.mp3")
+            loseSound = loadSound("downer_noise.mp3")
         }
 
         function setup() { 
@@ -473,6 +474,7 @@
                     b(xWhite+0.207*w,yWhite+0.1*w,xWhite+0.207*w,yWhite+0.225*w,player.x,player.y,"right")
                     b(xWhite+0.323*w,yWhite+0.02*w,xWhite+0.323*w,yWhite+0.175*w,player.x,player.y,"left")
                     b(xWhite+0.327*w,yWhite+0.02*w,xWhite+0.327*w,yWhite+0.175*w,player.x,player.y,"right")
+                    b(xWhite+0.32*w,yWhite+0.02*w,xWhite+0.32*w,yWhite+0.175*w,player.x,player.y,"left")
 
                     let changeUp = collideRectCircle(xWhite+0.125*w,yWhite,0.375*w,0.31*w,player.x,player.y,0.02*w)
                     let changeDown1 = collideRectCircle(xWhite,yWhite,0.125*w,0.3*w)
@@ -488,6 +490,7 @@
         }
 
         let neverWinYet = 0
+        let LOST = 0
 
         function endgame() { 
             this.update = function(){
@@ -502,6 +505,10 @@
                     let losers = document.getElementById("loseScreen") 
                     if ((endGameB == true)||(endGameT==true)||(barrierB1 == true)||(barrierB2==true)||(barrierB3==true)||(barrierB4==true)) { 
                         losers.style.zIndex = "5"
+                        LOST += 1
+                    }
+                    if (LOST == 1) {
+                        loseSound.play()
                     }
                 }
 
@@ -544,8 +551,11 @@
 
             stroke(0,0,0)
             line(xWhite+0.125*w,yWhite,xWhite+0.125*w,yWhite+0.3*w)
+        
             line(xWhite+0.2*w,yWhite+0.225*w,xWhite+0.5*w,yWhite+0.225*w)
+        
             line(xWhite+0.205*w,yWhite+0.1*w,xWhite+0.205*w,yWhite+0.225*w)
+            
             line(xWhite+0.325*w,yWhite+0.02*w,xWhite+0.325*w,yWhite+0.175*w)
 
             noStroke()
