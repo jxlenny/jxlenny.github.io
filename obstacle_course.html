@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js" integrity="sha512-uaz5GpnQoE6t5echKlX8P52czvsIGgLPcvlzfvRubLZ1Hp8JemUDnbUiAahbVtPb+jUVrNETuXvAhDDF/N3M4w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- Includes the p5.collide2D addon library -->
+    <script defer src="https://unpkg.com/p5.collide2d"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            overflow: hidden; 
+            margin: 0;
+            padding: 0;
+            background-color: black;
+        }
+
+    </style>
+</head>
+<body>
+    <script>
+        let w = window.innerWidth
+        let h = window.innerHeight 
+
+        let xWhite = (w/2)-0.25*w
+        let yWhite = (h/2)-0.25*w
+
+        var leftWall = false
+        var topWall = false;
+        var rightWall = false; 
+        var bottomWall = false
+
+        let start = 0
+        let obSides = false
+
+        function b(x1,y1,x2,y2,x,y,side){ 
+            let sideHit = collideLineCircle(x1,y1,x2,y2,x,y,0.015*w)
+            if (sideHit==true){ 
+                window.alert("LOSE")
+            }
+        }
+
+
+        function setup() { 
+            createCanvas(w,h)
+            stopSides = new sides()
+            player = new runner()
+            mazeSide = new maze()
+        }
+
+        function maze() { 
+            this.show = function() { 
+                
+            }
+
+            this.update = function() {
+                function blockCollide(xR,yR,w,h,xP,yP){
+                    
+                    
+                }
+
+            }
+        }
+
+        let cXLocation
+        let cYLocation
+
+        function runner() { 
+            this.x = xWhite+0.01*w
+            this.y = yWhite+0.01*w
+
+
+            this.leftVelocity = 4;
+            this.rightVelocity = 4;
+            this.upVelocity = 4;
+            this.downVelocity = 4;
+
+            this.show = function() { 
+                
+            }
+
+            this.update = function() { 
+                
+
+                if(keyIsDown(32)) { 
+                    fill("red")
+                    stroke("red")
+                    rect(xWhite+0.075*w,yWhite,0.05*w,0.45*w)
+                    rect(xWhite+0.125*w,yWhite+0.4*w,0.3*w,0.05*w)
+                    rect(xWhite+0.375*w,yWhite+0.05*w,0.05*w,0.35*w)
+                    rect(xWhite+0.175*w,yWhite+0.05*w,0.2*w,0.05*w)
+                    rect(xWhite+0.175*w,yWhite+0.1*w,0.045*w,0.26*w)
+                    rect(xWhite+0.175*w,yWhite+0.32*w,0.165*w,0.04*w)
+                    rect(xWhite+0.31*w,yWhite+0.135*w,0.03*w,0.2*w)
+                    rect(xWhite+0.25*w,yWhite+0.135*w,0.075*w,0.015*w)
+                    rect(xWhite+0.25*w,yWhite+0.135*w,0.03*w,0.155*w)
+                    fill("white")
+                    this.leftVelocity = 0;
+                    this.rightVelocity = 0;
+                    this.upVelocity = 0;
+                    this.downVelocity = 0;
+                    
+                }
+                else { 
+                    fill("blue")
+                }
+
+                b(xWhite+0.075*w,yWhite,xWhite+0.075*w,yWhite+0.45*w,this.x,this.y,"left")
+                b(xWhite+0.075*w,yWhite+0.45*w,xWhite+0.425*w,yWhite+0.45*w,this.x,this.y,"bottom")
+                b(xWhite+0.125*w,yWhite,xWhite+0.125*w,yWhite+0.45*w,this.x,this.y,"right")
+                b(xWhite+0.125*w,yWhite+0.4*w,xWhite+0.425*w,yWhite+0.4*w,this.x,this.y,"top")
+                b(xWhite+0.425*w,yWhite+0.05*w,xWhite+0.425*w,yWhite+0.45*w,this.x,this.y,"right")
+                b(xWhite+0.375*w,yWhite+0.05*w,xWhite+0.375*w,yWhite+0.4*w,this.x,this.y,"left")
+                b(xWhite+0.175*w,yWhite+0.05*w,xWhite+0.425*w,yWhite+0.05*w,this.x,this.y,"top")
+                b(xWhite+0.175*w,yWhite+0.05*w,xWhite+0.175*w,yWhite+0.36*w,this.x,this.y,"top")
+                b(xWhite+0.175*w,yWhite+0.36*w,xWhite+0.34*w,yWhite+0.36*w,this.x,this.y,"bottom")
+                b(xWhite+0.34*w,yWhite+0.135*w,xWhite+0.34*w,yWhite+0.36*w,this.x,this.y,"right")
+                b(xWhite+0.175*w,yWhite+0.1*w,xWhite+0.375*w,yWhite+0.1*w,this.x,this.y,"bottom")
+                b(xWhite+0.22*w,yWhite+0.1*w,xWhite+0.22*w,yWhite+0.36*w,this.x,this.y,"right")
+                b(xWhite+0.175*w,yWhite+0.32*w,xWhite+0.34*w,yWhite+0.32*w,this.x,this.y,"top")
+                b(xWhite+0.25*w,yWhite+0.135*w,xWhite+0.34*w,yWhite+0.135*w,this.x,this.x,"top")
+                b(xWhite+0.25*w,yWhite+0.135*w,xWhite+0.25*w,yWhite+0.29*w,this.x,this.y,"left")
+
+                b(xWhite+0.25*w,yWhite+0.29*w,xWhite+0.28*w,yWhite+0.29*w,this.x,this.y,"bottom")
+                b(xWhite+0.28*w,yWhite+0.135*w,xWhite+0.28*w,yWhite+0.29*w,this.x,this.y,"right")
+                b(xWhite+0.25*w,yWhite+0.15*w,xWhite+0.325*w,yWhite+0.15*w,this.x,this.y,"bottom")
+                b(xWhite+0.31*w,yWhite+0.135*w,xWhite+0.31*w,yWhite+0.34*w,this.x,this.y,"left")
+
+
+
+                
+                noStroke()
+                ellipse(this.x,this.y,0.02*w)
+                fill("blue")
+                ellipse(xWhite+0.295*w,yWhite+0.17*w,0.02*w)
+
+
+                if (keyIsDown(39) && (rightWall==false)) {
+                    this.x += this.rightVelocity                   
+                }
+                if (keyIsDown(37) && (leftWall==false)) { 
+                    this.x -= this.leftVelocity                    
+                }
+                if (keyIsDown(40) && (bottomWall==false)) { 
+                    this.y += this.downVelocity
+                    direction = "down"
+                    
+                }
+                if (keyIsDown(38) && (topWall==false)) { 
+                    this.y -= this.upVelocity
+                    direction = "up"
+                }     
+                
+                
+            }
+        }
+
+        function sides() { 
+            this.update = function() { 
+                leftWall = collideLineCircle(xWhite,yWhite,xWhite,yWhite+0.5*w,player.x,player.y,0.025*w)
+                topWall = collideLineCircle(xWhite,yWhite,xWhite+0.5*w,yWhite,player.x,player.y,0.025*w)
+                bottomWall = collideLineCircle(xWhite,yWhite+0.5*w,xWhite+0.5*w,yWhite+0.5*w,player.x,player.y,0.025*w)
+                rightWall = collideLineCircle(xWhite+0.5*w,yWhite,xWhite+0.5*w,yWhite+0.5*w,player.x,player.y,0.025*w)
+
+                if (leftWall==true) { 
+                    player.leftVelocity = 0;
+                }
+                else {
+                    player.leftVelocity = 4;
+                }
+
+                if (rightWall==true) { 
+                    player.rightVelocity = 0
+                }
+                else { 
+                    player.rightVelocity = 4;
+                }
+
+
+                if (bottomWall==true) { 
+                    player.downVelocity = 0
+                }
+                else { 
+                    player.downVelocity = 4;
+                }
+                if (topWall==true) { 
+                    player.upVelocity = 0
+                }
+                else { 
+                    player.upVelocity = 4;
+                }
+            }
+        }
+
+        function draw() { 
+            noStroke()
+            fill("white")
+            rect(xWhite,yWhite,0.5*w,0.5*w)
+            fill("black")
+            rect(0,0,xWhite,h)
+            rect(xWhite+0.5*w,0,xWhite,h)
+            rect(0,0,w,yWhite)
+            rect(0,yWhite+0.5*w,w,yWhite)
+
+
+            player.show()
+            player.update()
+            stopSides.update()
+            mazeSide.show()
+            mazeSide.update()
+
+        }
+    </script>
+    
+</body>
+</html>
