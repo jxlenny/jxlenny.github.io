@@ -30,15 +30,16 @@
         #notifier { 
             z-index: 3;
             position: absolute;
-            bottom: 0px;
-            right: 0px;
+            left: 50%;
+            top: 50%;
+            transform:translate(-50%,-50%);
             width: 30%;
             max-width: 550px; 
             height: 40%;
         }
 
         #text { 
-            background-color: white; 
+            background-color: red; 
             width: 90%;
             font-family: 'pixelify sans',sans-serif;
             font-size: 2vw;
@@ -119,7 +120,7 @@
             color: black;
         }
 
-        #i { 
+        .i { 
             font-style: italic;
         }
     </style>
@@ -128,7 +129,7 @@
 
     <div id="notifier">
         <div id="text">
-            Some obstacles you may never see coming. Get creative. Space out a little bit. <span id="i">(Hit the X to continue)</span>
+            Some obstacles you may never see coming. Get creative. <span class="i">SPACE</span> out a little bit. <span class="i">(Hit the X to continue)</span>
         </div>
         <button id="exit" onclick="hide()">X</button>
     </div>
@@ -310,7 +311,7 @@
                 ellipse(xWhite+0.295*w,yWhite+0.17*w,0.02*w)
 
                 let winGame = collideCircleCircle(xWhite+0.295*w,yWhite+0.17*w,0.02*w,this.x,this.y,0.02*w)
-                if ((winGame == true)&&(LOSE == 0)) {
+                if ((winGame == true)&&(LOST == 0)) {
                     WIN += 1
                     finish.style.zIndex = "5"
                     if (WIN == 1) {
