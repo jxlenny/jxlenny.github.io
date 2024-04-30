@@ -25,15 +25,16 @@
         #notifier { 
             z-index: 3;
             position: absolute;
-            bottom: 0px;
-            right: 0px;
+            left: 50%;
+            top: 50%;
+            transform:translate(-50%,-50%);
             width: 30%;
             max-width: 550px; 
             height: 40%;
         }
 
         #text { 
-            background-color: white; 
+            background-color: red; 
             width: 90%;
             font-family: 'pixelify sans',sans-serif;
             font-size: 2vw;
@@ -124,7 +125,7 @@
 <body>
     <div id="notifier">
         <div id="text">
-            Life is a journey. Navigate your way through the maze collecting all 4 squares and at least one moving blue circle <span id="i">(Hit the X to continue)</span>
+            Life is a journey. Use your arrow keys to navigate your way through the maze collecting all 4 squares and AT LEAST moving blue circle <span id="i">(Hit the X to continue)</span>
         </div>
         <button id="exit" onclick="hide()">X</button>
     </div>
