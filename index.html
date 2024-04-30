@@ -73,12 +73,17 @@
 </head>
 <body id="body">
     <script>
-        function nextScreen() { 
-            window.location.href="maze.html"
-        }
+        
 
         let w = window.innerWidth
         let h = window.innerHeight 
+
+        function nextScreen() { 
+            if ((w<800)||(h<600)){ 
+                window.alert('This game is optimized to be in fullscreen. Please make your screen is bigger so the game looks/works the best and you get the best experience. Thank you. -Jaelynn')
+            }
+            window.location.href="maze.html"
+        }
 
         let xWhite = (w/2)-0.25*w
         let yWhite = (h/2)-0.25*w
