@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js" integrity="sha512-uaz5GpnQoE6t5echKlX8P52czvsIGgLPcvlzfvRubLZ1Hp8JemUDnbUiAahbVtPb+jUVrNETuXvAhDDF/N3M4w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- Includes the p5.collide2D addon library -->
+    <script defer src="https://unpkg.com/p5.collide2d"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/addons/p5.sound.js" integrity="sha512-TU9AWtV5uUZPX8dbBAH8NQF1tSdigPRRT82vllAQ1Ke28puiqLA6ZVKxtUGlgrH6yWFnkKy+sE6luNEGH9ar0A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+    <style>
+        #body { 
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+            background-color: black;
+        }
+
+        #title { 
+            font-family: 'Pixelify Sans', sans-serif;
+            color: white;
+            font-size: 10vw;
+            position: absolute;
+            width: 80vw;
+            left: 10vw;
+            top: 12vw;
+            text-align: center;
+        }
+
+        #title:hover { 
+            color: red;
+        }
+
+      
+
+        #description {
+            color: white;
+            font-family: 'pixelify sans', sans-serif;
+            text-align: center;
+            width: 80vw;
+            font-size: 3vw;
+            position: absolute; 
+            left: 10vw;
+            top: 24vw;
+        
+        }
+
+        .welcomeButton {
+            background-color: red; 
+            font-family: "pixelify sans",sans-serif;
+            color: white;
+            font-size: 5vw;
+            margin-left: auto;
+            margin-right: auto;
+            position: absolute;
+            width: 30vw;
+        }
+
+        #nextScreen { 
+            left: 35vw;
+            top: 34vw;
+        }
+        #howToPlay {
+            left: 35vw; 
+            top: 38vw;
+        }
+    </style>
+</head>
+<body id="body">
+    <script>
+        function nextScreen() { 
+            window.location.href="maze.html"
+        }
+
+        let w = window.innerWidth
+        let h = window.innerHeight 
+
+        let xWhite = (w/2)-0.25*w
+        let yWhite = (h/2)-0.25*w
+        let jump = 0
+
+        function setup() { 
+            createCanvas(w,h)
+            player = new runner()
+            walls = new sides()
+        }
+
+        function sides() { 
+            this.update = function() { 
+                
+            }
+        }
+        
+
+        function runner() { 
+            this.x = 0.1*w
+            this.y = h - 0.03*w
+
+
+            this.gravity = 8
+            this.show = function() { 
+                fill("blue")
+                ellipse(this.x,this.y,0.04*w)
+            }
+            this.update = function() { 
+                this.up = random(40,h)
+                this.side = random(-w/5,w/5)
+                if ((this.x+this.side==0)||(this.x+this.side==w)){
+                    this.side = 0
+                }
+                if ((this.y < h-0.03*w)) { 
+                    this.y += this.gravity
+                    jump = 0
+                    console.log("gravity")
+                }
+                if ((collidePointCircle(mouseX,mouseY,this.x,this.y,0.04*w)==true)&&(jump < 5)) {
+                    this.y -= this.up
+                    this.x += this.side
+                    jump += 1
+                    console.log("jump")
+                }
+                
+             
+
+            }
+        }
+        
+        function draw() { 
+            clear()
+            player.show()
+            player.update()
+            walls.update()
+
+        }
+    </script>
+        
+    </script>
+    <div id="title">Life of an Orb</div>
+    <div id="description">Navigate through life and obstacles presented to the orb.</div>
+    <button class="welcomeButton" id="nextScreen" onclick="nextScreen()">Play</button>
+
+    
+</body>
+</html>
