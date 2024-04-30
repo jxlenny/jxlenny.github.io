@@ -11,6 +11,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/addons/p5.sound.js" integrity="sha512-TU9AWtV5uUZPX8dbBAH8NQF1tSdigPRRT82vllAQ1Ke28puiqLA6ZVKxtUGlgrH6yWFnkKy+sE6luNEGH9ar0A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
     <style>
         body { 
             overflow: hidden; 
@@ -18,11 +20,169 @@
             padding: 0;
             background-color: black;
         }
+        #score { 
+            z-index: 10;
+            color: white;
+            font-family: 'Pixelify sans';
+            position: absolute;
+        }
 
+        #notifier { 
+            z-index: 3;
+            position: absolute;
+            bottom: 0px;
+            right: 0px;
+            width: 30%;
+            max-width: 550px; 
+            height: 40%;
+        }
+
+        #text { 
+            background-color: white; 
+            width: 90%;
+            font-family: 'pixelify sans',sans-serif;
+            font-size: 2vw;
+            padding: 15px;
+        }
+        @media screen and (max-width: 810px) {
+            #text { 
+                font-size: 3.7vw;
+            }
+        }
+        @media screen and (max-width: 560px) {
+            #notifier { 
+                height: 65%; 
+            }
+        }
+
+        #exit { 
+            z-index: 4;
+            position: relative;
+            background-color: white;
+            border: white;
+            font-size: 20px;
+            top: 2px;
+        }
+        #exit:hover {
+            background-color: red;
+        }
+
+        #show {
+            width: 50px;
+            height: 50px; 
+            background-color: white;
+            position: absolute; 
+            bottom: 10px;
+            right: 10px; 
+            z-index: -50;
+            display: flex; 
+            justify-content: center; 
+            font-family: "pixelify sans";
+            align-items: center; 
+            font-size: 30px;
+        }
+
+        #show:hover { 
+            background-color: red;
+        }
+
+        .endOfLevel { 
+            background-color: black;
+            width: 35%; 
+            max-height: 400px;
+            height: 30vw;
+            position: absolute;
+            border: 3px solid red;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'pixelify sans';
+            font-size: 2vw;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            z-index: -3;
+        }
+        .endButton { 
+            background-color: red; 
+            font-family: "pixelify sans",sans-serif;
+            color: white;
+            font-size: 2.5vw;
+            margin-left: auto;
+            margin-right: auto;
+            width: 90%;
+            margin-bottom: 20px;
+        }
+
+        .endButton:hover { 
+            background-color: white;
+            color: black;
+        }
+
+        #i { 
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
+
+    <div id="notifier">
+        <div id="text">
+            Some obstacles you may never see coming. Get creative. Space out a little bit. <span id="i">(Hit the X to continue)</span>
+        </div>
+        <button id="exit" onclick="hide()">X</button>
+    </div>
+    <div id="show" onclick="show()">?</div>
+
+    <div class="endOfLevel" id="winScreen">
+        <h1>Congratulations!</h1>
+        <button class="endButton"id="nextPage" onclick="nextpage()">Next Level</button>
+        <br>
+        <button class="endButton" id="nextPage" onclick="homepage()">Back to Home</button>
+        <br>
+        <button class="endButton" id="nextPage" onclick="refresh()">Play Again</button>
+    </div>
+    <div class="endOfLevel" id="loseScreen">
+        <h1>You Lost.</h1>
+        <button class="endButton" id="nextPage" onclick="refresh()">Play Again</button>
+        <br>
+        <button class="endButton" id="nextPage" onclick="homepage()">Back to Home</button>
+    </div>
     <script>
+        var begin = 0
+
+        let losers = document.getElementById("loseScreen")
+        let LOST = 0 
+        let finish = document.getElementById("winScreen")
+        let WIN = 0
+
+        let exit = document.getElementById("notifier")
+        let appear = document.getElementById('show')
+        function hide() {      
+            exit.style.zIndex="-5"
+            appear.style.zIndex="5"
+            exit.style.visibility="hidden"
+            appear.style.visibility="visible"
+            begin += 1
+        }
+        function show() { 
+            exit.style.zIndex="5"
+            appear.style.zIndex="-5"
+            exit.style.visibility="visible"
+            appear.style.visibility="visible"
+            begin = 0
+        }
+
+        function nextpage() { 
+            window.location.href="endScreen.html"
+        }
+        function homepage() { 
+            window.location.href="index.html"
+        }
+        function refresh() { 
+            location.reload()
+        }
+
         let w = window.innerWidth
         let h = window.innerHeight 
 
@@ -37,10 +197,19 @@
         let start = 0
         let obSides = false
 
+        function preload() { 
+            winSound = loadSound("smb_stage_clear.mp3")
+            loseSound = loadSound("downer_noise.mp3")
+        }
+
         function b(x1,y1,x2,y2,x,y,side){ 
             let sideHit = collideLineCircle(x1,y1,x2,y2,x,y,0.015*w)
-            if (sideHit==true){ 
-                window.alert("LOSE")
+            if ((sideHit==true) &&(WIN ==0)){ 
+                LOST += 1 
+                losers.style.zIndex = "5"
+                if (LOST == 1) { 
+                    loseSound.play()
+                }
             }
         }
 
@@ -49,20 +218,16 @@
             createCanvas(w,h)
             stopSides = new sides()
             player = new runner()
-            mazeSide = new maze()
+            obs = new randomObs()
         }
 
-        function maze() { 
+        function randomObs() { 
             this.show = function() { 
                 
             }
 
             this.update = function() {
-                function blockCollide(xR,yR,w,h,xP,yP){
-                    
-                    
-                }
-
+                
             }
         }
 
@@ -84,6 +249,12 @@
             }
 
             this.update = function() { 
+                if ((LOST > 0)&&(WIN >0) ){ 
+                    this.leftVelocity =0;
+                    this.rightVelocity = 0;
+                    this.upVelocity = 0;
+                    this.downVelocity = 0;
+                }
                 
 
                 if(keyIsDown(32)) { 
@@ -137,6 +308,16 @@
                 ellipse(this.x,this.y,0.02*w)
                 fill("blue")
                 ellipse(xWhite+0.295*w,yWhite+0.17*w,0.02*w)
+
+                let winGame = collideCircleCircle(xWhite+0.295*w,yWhite+0.17*w,0.02*w,this.x,this.y,0.02*w)
+                if ((winGame == true)&&(LOSE == 0)) {
+                    WIN += 1
+                    finish.style.zIndex = "5"
+                    if (WIN == 1) {
+                        winSound.play()
+                    }
+
+                }
 
 
                 if (keyIsDown(39) && (rightWall==false)) {
@@ -210,8 +391,8 @@
             player.show()
             player.update()
             stopSides.update()
-            mazeSide.show()
-            mazeSide.update()
+            obs.show()
+            obs.update()
 
         }
     </script>
