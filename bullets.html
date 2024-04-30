@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js" integrity="sha512-uaz5GpnQoE6t5echKlX8P52czvsIGgLPcvlzfvRubLZ1Hp8JemUDnbUiAahbVtPb+jUVrNETuXvAhDDF/N3M4w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- Includes the p5.collide2D addon library -->
+    <script defer src="https://unpkg.com/p5.collide2d"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/addons/p5.sound.js" integrity="sha512-TU9AWtV5uUZPX8dbBAH8NQF1tSdigPRRT82vllAQ1Ke28puiqLA6ZVKxtUGlgrH6yWFnkKy+sE6luNEGH9ar0A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <style>
+        body { 
+            overflow: hidden; 
+            margin: 0;
+            padding: 0;
+            background-color: black;
+        }
+
+        #score { 
+            z-index: 10;
+            color: white;
+            font-family: 'Pixelify sans';
+            position: absolute;
+        }
+
+        #notifier { 
+            z-index: 3;
+            position: absolute;
+            bottom: 0px;
+            right: 0px;
+            width: 30%;
+            max-width: 550px; 
+            height: 40%;
+        }
+
+        #text { 
+            background-color: white; 
+            width: 90%;
+            font-family: 'pixelify sans',sans-serif;
+            font-size: 2vw;
+            padding: 15px;
+        }
+        @media screen and (max-width: 810px) {
+            #text { 
+                font-size: 3.7vw;
+            }
+        }
+        @media screen and (max-width: 560px) {
+            #notifier { 
+                height: 65%; 
+            }
+        }
+
+        #exit { 
+            z-index: 4;
+            position: relative;
+            background-color: white;
+            border: white;
+            font-size: 20px;
+            top: 2px;
+        }
+        #exit:hover {
+            background-color: red;
+        }
+
+        #show {
+            width: 50px;
+            height: 50px; 
+            background-color: white;
+            position: absolute; 
+            bottom: 10px;
+            right: 10px; 
+            z-index: -50;
+            display: flex; 
+            justify-content: center; 
+            font-family: "pixelify sans";
+            align-items: center; 
+            font-size: 30px;
+        }
+
+        #show:hover { 
+            background-color: red;
+        }
+
+        .endOfLevel { 
+            background-color: black;
+            width: 35%; 
+            max-height: 400px;
+            height: 30vw;
+            position: absolute;
+            border: 3px solid red;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'pixelify sans';
+            font-size: 2vw;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            z-index: -3;
+        }
+        .endButton { 
+            background-color: red; 
+            font-family: "pixelify sans",sans-serif;
+            color: white;
+            font-size: 2.5vw;
+            margin-left: auto;
+            margin-right: auto;
+            width: 90%;
+            margin-bottom: 20px;
+        }
+
+        .endButton:hover { 
+            background-color: white;
+            color: black;
+        }
+
+        #i { 
+            font-style: italic;
+        }
+    </style>
+    
+</head>
+<body>    
+    <h1 id="score">Score: <span id="points"></span></h1>
+
+    <div id="notifier">
+        <div id="text">
+            Obstacles will continue to be thrown at you the more you grow. Absorb 10 blue orbs and you move on. <span id="i">(Hit the X to continue)</span>
+        </div>
+        <button id="exit" onclick="hide()">X</button>
+    </div>
+    <div id="show" onclick="show()">?</div>
+
+    <div class="endOfLevel" id="winScreen">
+        <h1>Congratulations!</h1>
+        <button class="endButton"id="nextPage" onclick="nextpage()">Next Level</button>
+        <br>
+        <button class="endButton" id="nextPage" onclick="homepage()">Back to Home</button>
+        <br>
+        <button class="endButton" id="nextPage" onclick="refresh()">Play Again</button>
+    </div>
+    <div class="endOfLevel" id="loseScreen">
+        <h1>You Lost.</h1>
+        <button class="endButton" id="nextPage" onclick="refresh()">Play Again</button>
+        <br>
+        <button class="endButton" id="nextPage" onclick="homepage()">Back to Home</button>
+    </div>
+    <script>
+        let start = 0 
+
+        let win = 0 
+        let lose = 0 
+
+        let exit = document.getElementById("notifier")
+        let appear = document.getElementById('show')
+        function hide() {      
+            exit.style.zIndex="-5"
+            appear.style.zIndex="5"
+            exit.style.visibility="hidden"
+            appear.style.visibility="visible"
+            start += 1
+        }
+        function show() { 
+            exit.style.zIndex="5"
+            appear.style.zIndex="-5"
+            exit.style.visibility="visible"
+            appear.style.visibility="visible"
+            start = 0
+        }
+
+        function nextpage() { 
+            window.location.href="obstacle_course.html"
+        }
+        function homepage() { 
+            window.location.href="index.html"
+        }
+        function refresh() { 
+            location.reload()
+        }
+
+
+        
+        let w = window.innerWidth
+        let h = window.innerHeight 
+
+        let xWhite = (w/2)-0.25*w
+        let yWhite = (h/2)-0.25*w
+
+        var leftWall = false
+        var topWall = false;
+        var rightWall = false; 
+        var bottomWall = false
+        
+        var points = 0
+        var radius = 0.02*w
+        var hitTrack = 0
+
+        function preload() { 
+            winSound = loadSound("smb_stage_clear.mp3")
+        }
+
+        function setup() { 
+            createCanvas(w,h)
+            stopSides = new sides()
+            player = new runner()
+            topBullets = new topbullets()
+
+        }
+
+        function runner() { 
+            this.x = xWhite+0.075*w
+
+            this.leftVelocity = 4;
+            this.rightVelocity = 4;
+            this.upVelocity = 4;
+            this.downVelocity = 4;
+
+            this.show = function() { 
+                fill("blue")
+                noStroke()
+                ellipse(this.x,this.y,radius)
+            }
+
+            this.update = function() { 
+                this.y = yWhite+0.45*w-(radius/2)
+
+                if (keyIsDown(39) && (rightWall==false)) {
+                    this.x += this.rightVelocity                   
+                }
+                if (keyIsDown(37) && (leftWall==false)) { 
+                    this.x -= this.leftVelocity                    
+                }
+
+                console.log(radius)
+                let point = document.getElementById("points")
+                point.innerHTML = points
+                
+            }
+        }
+
+        function topbullets() { 
+            this.x1 = random(xWhite,xWhite+0.48*w)
+            this.y1 = yWhite
+            this.x2 = random(xWhite,xWhite+0.48*w)
+            this.y2 = yWhite
+            this.x3 = random(xWhite,xWhite+0.48*w)
+            this.y3 = yWhite
+
+            this.bulletVelocity1 = 5
+            this.bulletVelocity2 = 5
+            this.bulletVelocity3 = 5
+
+            this.cx1 = random(xWhite,xWhite+0.48*w)
+            this.cy1 = yWhite+0.01*w
+
+            this.raindropV1 = 6
+
+
+            this.show = function() { 
+                fill("red")
+                triangle(this.x1,this.y1,this.x1+0.02*w,this.y1,this.x1+0.01*w,this.y1+0.02*w)
+                triangle(this.x2,this.y2,this.x2+0.02*w,this.y2,this.x2+0.01*w,this.y2+0.02*w)
+                triangle(this.x3,this.y3,this.x3+0.02*w,this.y3,this.x3+0.01*w,this.y3+0.02*w)
+
+                fill("blue")
+                ellipse(this.cx1,this.cy1,0.02*w)
+                
+            }
+            this.update = function() { 
+                if (start == 0) { 
+                    this.bulletVelocity1 = 0
+                    this.bulletVelocity2 = 0
+                    this.bulletVelocity3 = 0
+                    this.raindropV1 = 0
+                }
+                else { 
+                    this.bulletVelocity1 = random(5,8)
+                    this.bulletVelocity2 = random(5,8)
+                    this.bulletVelocity3 = random(5,8)
+                    this.raindropV1 = random(5,8)
+                    
+                }
+                this.y1 += this.bulletVelocity1
+                this.y2 += this.bulletVelocity2
+                this.y3 += this.bulletVelocity3
+
+                this.cy1 += this.raindropV1
+
+                if(this.y1>yWhite+0.48*w) {
+                    this.y1 = yWhite
+                    this.bulletVelocity1 = random(5,8)
+                    this.x1 = random(xWhite,xWhite+0.48*w)
+                }
+
+                if(this.y2>yWhite+0.48*w) {
+                    this.y2 = yWhite
+                    this.bulletVelocity2 = random(5,8)
+                    this.x2 = random(xWhite,xWhite+0.48*w)
+                }
+                if(this.y3>yWhite+0.48*w) {
+                    this.y3 = yWhite
+                    this.bulletVelocity3 = random(5,8)
+                    this.x3 = random(xWhite,xWhite+0.48*w)
+                }
+
+                if(this.cy1>yWhite+0.48*w) {
+                    this.cy1 = yWhite+0.01*w
+                    this.raindropV1 = random(4,6)
+                    this.cx1 = random(xWhite+0.01*w,xWhite+0.49*w)
+                    if (hitTrack > 0) { 
+                        radius = radius *(7/6)
+                        points += 1
+                    } 
+                    hitTrack = 0
+                }
+
+                this.topT1End = collideRectCircle(this.x1,this.y1,0.01*w,0.01*w,player.x,player.y,radius)
+                this.topT2End = collideRectCircle(this.x2,this.y2,0.01*w,0.01*w,player.x,player.y,radius)
+                this.topT3End = collideRectCircle(this.x3,this.y3,0.01*w,0.01*w,player.x,player.y,radius)
+                
+                
+                let losers = document.getElementById("loseScreen") 
+                if((this.topT1End == true)||(this.topT2End==true)||(this.topT3End == true)) { 
+                    losers.style.zIndex = "5"
+                    start = 0
+                }
+                
+
+                
+                let finish = document.getElementById("winScreen")
+                if(points == 10) {
+                    finish.style.zIndex = "5"
+                    win += 1;
+                    start= 0
+                    if (win == 1) { 
+                        winSound.play()
+                    }
+                }
+
+                let raindrop = collideCircleCircle(this.cx1,this.cy1,0.02*w,player.x,player.y,radius)
+                if (raindrop == true) { 
+                    hitTrack += 1;
+                }
+            }
+        }
+
+        function sides() { 
+            this.update = function() { 
+                leftWall = collideLineCircle(xWhite,yWhite,xWhite,(h/2)+0.25*w,player.x,player.y,radius)
+                topWall = collideLineCircle(xWhite,yWhite,xWhite+0.5*w,yWhite,player.x,player.y,radius)
+                bottomWall = collideLineCircle(xWhite,yWhite+0.5*w,xWhite+0.5*w,yWhite+0.5*w,player.x,player.y,radius)
+                rightWall = collideLineCircle(xWhite+0.5*w,yWhite,xWhite+0.5*w,yWhite+0.5*w,player.x,player.y,radius)
+
+                if (leftWall==true) { 
+                    player.leftVelocity = 0;
+                }
+                else {
+                    player.leftVelocity = 4;
+                }
+
+                if (rightWall==true) { 
+                    player.rightVelocity = 0
+                }
+                else { 
+                    player.rightVelocity = 4;
+                }
+
+
+                if (bottomWall==true) { 
+                    player.downVelocity = 0
+                }
+                else { 
+                    player.downVelocity = 4;
+                }
+                if (topWall==true) { 
+                    player.upVelocity = 0
+                }
+                else { 
+                    player.upVelocity = 4;
+                }
+            }
+        }
+
+        function draw() { 
+            noStroke()
+            fill("white")
+            rect(xWhite,yWhite,0.5*w,0.5*w)
+
+            player.show()
+            player.update()
+            stopSides.update()
+            topBullets.show()
+            topBullets.update()
+
+            fill("green")
+            rect(xWhite,yWhite+0.45*w,0.5*w,0.05*w)
+            fill("black")
+            rect(0,0,xWhite,h)
+            rect(xWhite+0.5*w,0,xWhite,h)
+        }
+    </script>
+
+
+</body>
+</html>
