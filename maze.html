@@ -13,6 +13,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/addons/p5.sound.js" integrity="sha512-TU9AWtV5uUZPX8dbBAH8NQF1tSdigPRRT82vllAQ1Ke28puiqLA6ZVKxtUGlgrH6yWFnkKy+sE6luNEGH9ar0A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
         body { 
             overflow: hidden; 
@@ -113,13 +114,17 @@
             color: black;
         }
 
+        #i { 
+            font-style: italic;
+        }
+
 
     </style>
 </head>
 <body>
     <div id="notifier">
         <div id="text">
-            Use your arrow keys to navigate through the maze and collect all of the blue squares. Make sure to not run into the red circles as you go.
+            Life is a journey. Navigate your way through the maze collecting all 4 squares and at least one moving blue circle <span id="i">(Hit the X to continue)</span>
         </div>
         <button id="exit" onclick="hide()">X</button>
     </div>
@@ -166,6 +171,10 @@
         let block2 = 0
         let block3 = 0
         let block4 = 0
+
+        let finish = document.getElementById("winScreen")
+        let losers = document.getElementById("loseScreen") 
+        finish.style.zIndex = "-5"
         
 
         //calculating position in reference to
@@ -176,6 +185,7 @@
 
         function preload() { 
             winSound = loadSound("smb_stage_clear.mp3")
+            loseSound = loadSound("downer_noise.mp3")
         }
 
         function setup() {
@@ -260,8 +270,7 @@
                 if (backwardsT4==2) { 
                     this.velocity = 0.001*w
                 }
-                /*
-                console.log(this.velocity)*/
+              
 
                 if (this.velocity > 0) { 
                     if (this.x <= xWhite+0.12*w) { 
@@ -323,12 +332,10 @@
                 if (backwardsT3==2) { 
                     this.velocity = 0.002*w
                 }
-                /*console.log(backwardsT3)*/
 
                 if (this.velocity > 0) { 
                     if (this.x <= xWhite+0.07*w) { 
                         this.x += this.velocity
-                        /*console.log("step1")*/
                     }
                     if ((this.x >= xWhite+0.07*w)&&(this.x<=xWhite+0.125*w) && (this.y <= yWhite+0.475*w)) {
                         this.y += this.velocity
@@ -482,13 +489,17 @@
             }
         }
 
+        var circleWin1 = 0
+        var circleWin2 = 0 
+        let timer1 = 0
+        let timer2 = 0
+
         function runner() { 
             this.x = (w/2)+0.205*w
             this.y = (h/2)-0.225*w 
 
             this.show = function() {
-                
-                
+                                
                 
                 stroke(0,0,0);
 
@@ -502,6 +513,62 @@
 
             this.update = function() { 
                 noStroke()
+                timer1 += 1
+                timer2 += 1
+
+                let possiblePosition = [0.025,0.075,0.125,0.175,0.225,0.275,0.325,0.375,0.425,0.475]
+                this.circleX1
+                this.circleY1
+                if (timer1 == 1){ 
+                    this.circleX1 = xWhite+(random(possiblePosition)*w)
+                    this.circleY1 = yWhite+(random(possiblePosition)*w)
+
+                    if ((this.x+0.2*w,this.y+0.2*w)==(this.circleX1,this.circleY1)){ 
+                        this.circleX1 = xWhite+(random(possiblePosition)*w)
+                        this.circleY1 = yWhite+(random(possiblePosition)*w)
+                    }
+                    else {
+                        this.circleX1 = xWhite+(random(possiblePosition)*w)
+                        this.circleY1 = yWhite+(random(possiblePosition)*w)
+                    }
+                }
+
+                if ((circleWin1==0)&&(timer1 < 500)) { 
+                    fill("blue")
+                    ellipse(this.circleX1,this.circleY1,0.04*w)
+                    
+                }
+
+                if ((timer1 == 499)&&(timer1!=0)) { 
+                    timer1 = 0
+                }
+
+                
+                this.circleX2
+                this.circleY2
+                if (timer2 == 1){ 
+                    this.circleX2 = xWhite+(random(possiblePosition)*w)
+                    this.circleY2 = yWhite+(random(possiblePosition)*w)
+
+                    if ((this.x+0.2*w,this.y+0.2*w)==(this.circleX2,this.circleY2)){ 
+                        this.circleX2 = xWhite+(random(possiblePosition)*w)
+                        this.circleY2 = yWhite+(random(possiblePosition)*w)
+                    }
+                    else {
+                        this.circleX2 = xWhite+(random(possiblePosition)*w)
+                        this.circleY2 = yWhite+(random(possiblePosition)*w)
+                    }
+                }
+                if ((circleWin2==0)&&(timer2 < 500)) { 
+                    fill("blue")
+                    ellipse(this.circleX2,this.circleY2,0.04*w)
+                }
+                if ((timer2 == 499)) { 
+                    timer2 = 0
+                }
+
+
+
                 if(block2 == 0){ 
                     fill("blue")
                 }
@@ -534,7 +601,8 @@
                 ellipse(this.x,this.y,0.02*w)
 
                 let start = document.getElementById("notifier")
-                if ((start.style.visibility == "hidden")) { 
+                console.log(finish.style.zIndex)
+                if ((start.style.visibility == "hidden")&&(LOST ==0 &&(doneCounter!=5))) { 
                     xVelocity = w*0.004
                     yVelocity = w*0.004
                 }
@@ -1061,10 +1129,11 @@
                     direction = "up"
                 }
                 
-                /*console.log(direction)*/
             
             }
         }
+        let LOST = 0
+
 
         function endGame() { 
             this.update = function() { 
@@ -1072,18 +1141,35 @@
                 let endGameT2 = collideCircleCircle(teacher2.x,teacher2.y,0.02*w,player.x,player.y,0.02*w)
                 let endGameT3 = collideCircleCircle(teacher3.x,teacher3.y,0.02*w,player.x,player.y,0.02*w)
                 let endGameT4 = collideCircleCircle(teacher4.x,teacher4.y,0.02*w,player.x,player.y,0.02*w)
-                let losers = document.getElementById("loseScreen") 
+                
                 if ((endGameT1 == true) || (endGameT2==true)||(endGameT3==true)||(endGameT4==true)){
-                    losers.style.zIndex = "5"
+                    LOST += 1
                 }
+                if (LOST == 1){ 
+                    loseSound.play()
+                }
+                if (LOST> 0) { 
+                    losers.style.zIndex = "5"
+                    xVelocity = 0 
+                    yVelocity = 0
+
+                }
+
     
                 let winGameB2 = collideRectCircle(xWhite+0.2525*w,yWhite+0.4525*w,0.045*w,0.045*w,player.x,player.y,0.02*w)
                 let winGameB1 = collideRectCircle(xWhite+0.1525*w,yWhite+0.0025*w,0.045*w,0.045*w,player.x,player.y,0.02*w)
                 let winGameB3 = collideRectCircle(xWhite+0.3525*w,yWhite+0.3025*w,0.045*w,0.045*w,player.x,player.y,0.02*w)
                 let winGameB4 = collideRectCircle(xWhite+0.2525*w,yWhite+0.1525*w,0.045*w,0.045*w,player.x,player.y,0.02*w)
-                /*console.log(winGameB1 + "1")
-                console.log(winGameB2 + "2")*/
-                if ((winGameB2==true)||(winGameB1==true)||(winGameB3==true)||(winGameB4==true)) {
+                
+                var winCircleCollide1 = collideCircleCircle(player.circleX1,player.circleY1,0.04*w,player.x,player.y,0.02*w)
+                var winCircleCollide2 = collideCircleCircle(player.circleX2,player.circleY2,0.04*w,player.x,player.y,0.02*w)
+                
+                let win
+                
+                
+
+            
+                if ((winGameB2==true)||(winGameB1==true)||(winGameB3==true)||(winGameB4==true)||(winCircleCollide1 == true)||(winCircleCollide2)) {
                     if(winGameB1 == true) { 
                         if (block1 == 0){
                             block1 +=1
@@ -1116,10 +1202,26 @@
                             doneCounter += 1
                         }
                     }
+                    if((circleWin1 == 0)&&(winCircleCollide2==true)){ 
+                        if (circleWin2 == 0) { 
+                            doneCounter += 1
+                            winSound.setVolume(0.5)
+                            winSound.play()
+                        }
+                        circleWin2 += 1
+                    } 
+                    if((circleWin2 == 0)&&(winCircleCollide1==true)){ 
+                        if (circleWin1 == 0) { 
+                            doneCounter += 1
+                            winSound.setVolume(0.5)
+                            winSound.play()
+                        }
+                        circleWin1 += 1
+                    } 
+
                 }
 
-                let finish = document.getElementById("winScreen")
-                if (doneCounter == 4) { 
+                if (doneCounter == 5) { 
                     finish.style.zIndex = "5"
                 }
             }
